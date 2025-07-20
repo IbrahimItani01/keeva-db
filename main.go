@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"keeva-db/services"
 	"keeva-db/utils"
 	"net"
 )
@@ -16,9 +17,10 @@ func main () {
 	defer connection.Close()
 
 	for {
-		buffer := make([]byte,1024)
-		_,err := connection.Read(buffer)
-		utils.ParseError(err,true)
+		resp := services.NewResp(connection)
+		value, err := resp.Read()
+		utils.ParseError(err,false)
+		fmt.Println(value)
 		connection.Write([]byte("+OK\r\n"))
 	}
 
